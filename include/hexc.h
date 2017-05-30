@@ -41,8 +41,9 @@ typedef struct hexc_ai hexc_ai_t;
 typedef struct hexc_game hexc_game_t;
 
 enum hexc_color {
-  HEXC_COLOR_RED = 0,
-  HEXC_COLOR_BLUE = 1
+  HEXC_COLOR_WHITE = 0,
+  HEXC_COLOR_RED = 1,
+  HEXC_COLOR_BLUE = 2
 };
 
 struct hexc_player {
