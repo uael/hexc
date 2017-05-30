@@ -30,6 +30,8 @@
 
 #ifndef bool
 # define bool unsigned char
+# define true  1UL
+# define false 0UL
 #endif
 
 typedef const char *string_t;
