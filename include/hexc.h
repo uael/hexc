@@ -39,6 +39,7 @@
 typedef const char *string_t;
 typedef char hexc_color_t;
 typedef struct hexc_cell hexc_cell_t;
+typedef struct hexc_aicell hexc_aicell_t;
 typedef struct hexc_player hexc_player_t;
 typedef struct hexc_ai hexc_ai_t;
 typedef struct hexc_game hexc_game_t;
@@ -72,11 +73,18 @@ struct hexc_player {
 extern void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color);
 extern void hexc_player_dtor(hexc_player_t *self);
 
+struct hexc_aicell {
+  int x, y;
+  hexc_color_t color;
+  size_t weight;
+  bool past;
+};
+
 struct hexc_ai {
   string_t name;
   hexc_color_t color;
   bool is_ai;
-  hexc_cell_t vue[14][14];
+  hexc_aicell_t vue[14][14];
 
   void (*play)(struct hexc_ai*, hexc_game_t*, int[2]);
 };

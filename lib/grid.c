@@ -85,8 +85,7 @@ void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream) {
 
 bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
   bool victory = false;
-  hexc_cell_t *cell;
-  hexc_cell_t *next, *cells[6];
+  hexc_cell_t *cell, *next, *cells[6];
   int i, j, count;
 
   if (neighbor_cells_n) {
