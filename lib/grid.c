@@ -27,21 +27,30 @@
 
 #include "hexc.h"
 
-bool hexc_grid_has_winner(hexc_color_t *grid[14][14], hexc_player_t *out) {
+void hexc_grid_init(hexc_cell_t grid[14][14]) {
+  int i, j;
+
+  for (i = 0; i<14; ++i) {
+    for (j = 0; j<14; ++j) {
+      grid[i][j].color = HEXC_COLOR_WHITE;
+      grid[i][j].x = i;
+      grid[i][j].y = j;
+    }
+  }
+}
+
+bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out) {
   return false;
 }
 
-void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], int x, int y, hexc_color_t *cells[6], unsigned *count) {
-  int i, j;
-
+void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t cells[6], unsigned *count) {
+#define ADD_COUPLE(i, j) do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14) *(cells + (++*count, *count-1)) = grid[i][j]; while (0)
   *count = 0;
-  for (i = x-1; i<x+1; ++i) {
-    if (i >= 0 && i < 14) {
-      for (j = y-1; j<y+1; ++j) {
-        if (j >= 0 && j < 14) {
-          *cells[*count++] = *grid[i][j];
-        }
-      }
-    }
-  }
+  ADD_COUPLE(x-1, y);
+  ADD_COUPLE(x-1, y+1);
+  ADD_COUPLE(x, y+1);
+  ADD_COUPLE(x, y-1);
+  ADD_COUPLE(x+1, y);
+  ADD_COUPLE(x+1, y-1);
+#undef ADD_COUPLE
 }

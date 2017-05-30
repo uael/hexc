@@ -26,17 +26,30 @@
  */
 
 #include <cute.h>
+#include <string.h>
 
 #include "hexc.h"
 
 CUTEST_DATA {
-  hexc_color_t grid[14][14];
+  hexc_cell_t grid[14][14];
 };
 
-CUTEST_SETUP {}
+CUTEST_SETUP {
+  hexc_grid_init(self->grid);
+}
 CUTEST_TEARDOWN {}
 
 CUTEST(grid, neighbor) {
+  hexc_cell_t cells[6];
+  unsigned count;
+
+  hexc_grid_neighbor_cells(self->grid, 5, 5, cells, &count);
+  ASSERT(memcmp(&self->grid[4][5], &cells[0], sizeof(hexc_cell_t)) == 0);
+  ASSERT(memcmp(&self->grid[4][6], &cells[1], sizeof(hexc_cell_t)) == 0);
+  ASSERT(memcmp(&self->grid[5][6], &cells[2], sizeof(hexc_cell_t)) == 0);
+  ASSERT(memcmp(&self->grid[5][4], &cells[3], sizeof(hexc_cell_t)) == 0);
+  ASSERT(memcmp(&self->grid[6][5], &cells[4], sizeof(hexc_cell_t)) == 0);
+  ASSERT(memcmp(&self->grid[6][4], &cells[5], sizeof(hexc_cell_t)) == 0);
   return EXIT_SUCCESS;
 }
 
