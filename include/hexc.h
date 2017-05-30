@@ -42,19 +42,21 @@ typedef struct hexc_ai hexc_ai_t;
 typedef struct hexc_game hexc_game_t;
 
 enum hexc_color {
-  HEXC_COLOR_WHITE = 0,
-  HEXC_COLOR_RED = 1,
-  HEXC_COLOR_BLUE = 2
+  HEXC_COLOR_WHITE = -1,
+  HEXC_COLOR_RED = 0,
+  HEXC_COLOR_BLUE = 1
 };
 
 struct hexc_cell {
   int x, y;
   hexc_color_t color;
+  bool past;
 };
 
 extern void hexc_grid_init(hexc_cell_t grid[14][14]);
+extern void hexc_grid_reset(hexc_cell_t grid[14][14]);
 extern bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out);
-extern void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t cells[6], unsigned *count);
+extern void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count);
 
 struct hexc_player {
   string_t name;

@@ -39,12 +39,68 @@ void hexc_grid_init(hexc_cell_t grid[14][14]) {
   }
 }
 
+extern void hexc_grid_reset(hexc_cell_t grid[14][14]) {
+  int i, j;
+
+  for (i = 0; i<14; ++i) {
+    for (j = 0; j<14; ++j) {
+      grid[i][j].past = false;
+    }
+  }
+}
+
+static bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
+  bool victory = false;
+  hexc_cell_t *cell, *next, *cells[6];
+  int i, j, count;
+
+  if (neighbor_cells_n) {
+    for (i = 0; i<neighbor_cells_n; ++i) {
+      cell = neighbor_cells[i];
+      hexc_grid_neighbor_cells(grid, cell->x, cell->y, cells, (unsigned int *) &count);
+      for (j = 0; j<count; ++j) {
+        next = cells[j];
+        if (next->color == HEXC_COLOR_BLUE && next->x >= 14) {
+          victory = true;
+        }
+        if (next->color == HEXC_COLOR_RED && next->y >= 14) {
+          victory = true;
+        }
+      }
+      if (!victory) {
+        victory = hexc_grid_search_winner(grid, cells, count);
+      }
+    }
+  }
+  return victory;
+}
+
+static bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y) {
+  bool victory = false;
+  hexc_cell_t *cell, *cells[6];
+  int count;
+
+  cell = &grid[x][y];
+  cell->past = true;
+  hexc_grid_neighbor_cells(grid, cell->x, cell->y, cells, (unsigned int *) &count);
+  victory = hexc_grid_search_winner(grid, cells, count);
+  hexc_grid_reset(grid);
+  return victory;
+}
+
 bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out) {
   return false;
 }
 
-void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t cells[6], unsigned *count) {
-#define ADD_COUPLE(i, j) do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14) *(cells + (++*count, *count-1)) = grid[i][j]; while (0)
+void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count) {
+  hexc_cell_t cell;
+
+  cell = grid[x][y];
+#define ADD_COUPLE(i, j) \
+  do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14&&grid[i][j].color==cell.color) \
+    *(cells + (++*count, *count-1)) = (grid[i][j].past = true, &grid[i][j]); \
+  while (0)
+
   *count = 0;
   ADD_COUPLE(x-1, y);
   ADD_COUPLE(x-1, y+1);
