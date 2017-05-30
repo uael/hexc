@@ -25,53 +25,16 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-#ifndef  HEXC_H__
-# define HEXC_H__
+#include "hexc.h"
 
-#ifndef bool
-# define bool unsigned char
-# define true  1UL
-# define false 0UL
-#endif
+void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue) {
+  *self = (hexc_game_t) {
+    .players = {
+      *red, *blue
+    }
+  };
+}
 
-typedef const char *string_t;
-typedef unsigned char hexc_color_t;
-typedef struct hexc_player hexc_player_t;
-typedef struct hexc_ai hexc_ai_t;
-typedef struct hexc_game hexc_game_t;
+void hexc_game_dtor(hexc_game_t *self) {
 
-enum hexc_color {
-  HEXC_COLOR_RED = 0,
-  HEXC_COLOR_BLUE = 1
-};
-
-struct hexc_player {
-  string_t name;
-  hexc_color_t color;
-  bool is_ai;
-};
-
-extern void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color);
-extern void hexc_player_dtor(hexc_player_t *self);
-
-struct hexc_ai {
-  string_t name;
-  hexc_color_t color;
-  bool is_ai;
-  hexc_color_t vue[14][14];
-
-  void (*play)(struct hexc_ai *self, hexc_game_t *game);
-};
-
-extern void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(struct hexc_ai *, hexc_game_t *));
-extern void hexc_ai_dtor(hexc_ai_t *self);
-
-struct hexc_game {
-  hexc_color_t grid[14][14];
-  hexc_player_t players[2];
-};
-
-extern void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue);
-extern void hexc_game_dtor(hexc_game_t *self);
-
-#endif /* HEXC_H__ */
+}
