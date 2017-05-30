@@ -28,6 +28,8 @@
 #ifndef  HEXC_H__
 # define HEXC_H__
 
+#include <stdio.h>
+
 #ifndef bool
 # define bool unsigned char
 # define true  1UL
@@ -55,6 +57,7 @@ struct hexc_cell {
 
 extern void hexc_grid_init(hexc_cell_t grid[14][14]);
 extern void hexc_grid_reset(hexc_cell_t grid[14][14]);
+extern void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream);
 extern bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out);
 extern void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count);
 

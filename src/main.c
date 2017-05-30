@@ -25,9 +25,11 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-#include <stdio.h>
+#include <hexc.h>
 
 int main() {
-  printf("Hello, World!\n");
+  hexc_cell_t grid[14][14] = {0};
+
+  hexc_grid_print(grid, stdout);
   return 0;
 }

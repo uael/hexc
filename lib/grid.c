@@ -39,13 +39,46 @@ void hexc_grid_init(hexc_cell_t grid[14][14]) {
   }
 }
 
-extern void hexc_grid_reset(hexc_cell_t grid[14][14]) {
+void hexc_grid_reset(hexc_cell_t grid[14][14]) {
   int i, j;
 
   for (i = 0; i<14; ++i) {
     for (j = 0; j<14; ++j) {
       grid[i][j].past = false;
     }
+  }
+}
+
+void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream) {
+  int i, j, k;
+  hexc_cell_t cell;
+
+  fputs(" / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\\n", stream);
+  for (i = 0; i<14; ++i) {
+    for (k = 0; k < (2*i); ++k) {
+      fputc(' ', stream);
+    }
+    for (j = 0; j<14; ++j) {
+      cell = grid[i][j];
+      fputs("| ", stream);
+      switch (cell.color) {
+        case HEXC_COLOR_BLUE:
+          fputc('O', stream);
+          break;
+        case HEXC_COLOR_RED:
+          fputc('X', stream);
+          break;
+        default:
+          fputc(' ', stream);
+          break;
+      }
+      fputc(' ', stream);
+    }
+    fputs("|\n", stream);
+    for (k = 0; k < (2*i); ++k) {
+      fputc(' ', stream);
+    }
+    fputs(" \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\\n", stream);
   }
 }
 
