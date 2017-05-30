@@ -73,5 +73,6 @@ struct hexc_game {
 
 extern void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue);
 extern void hexc_game_dtor(hexc_game_t *self);
+extern bool hexc_game_play(hexc_game_t *self);
 
 #endif /* HEXC_H__ */

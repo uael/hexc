@@ -38,3 +38,7 @@ void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue) 
 void hexc_game_dtor(hexc_game_t *self) {
 
 }
+
+bool hexc_game_play(hexc_game_t *self) {
+  return true;
+}
