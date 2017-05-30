@@ -32,10 +32,10 @@ int main() {
   hexc_player_t red = {0};
   hexc_player_t blue = {0};
 
-  hexc_player_ctor(&red, hexc_color_tostring(HEXC_COLOR_RED), HEXC_COLOR_RED);
-  hexc_player_ctor(&blue, hexc_color_tostring(HEXC_COLOR_BLUE), HEXC_COLOR_BLUE);
+  hexc_player_ctor(&red, hexc_color_tostring(HEXC_COLOR_RED), HEXC_COLOR_RED, hexc_ai_montecarlo);
+  hexc_player_ctor(&blue, hexc_color_tostring(HEXC_COLOR_BLUE), HEXC_COLOR_BLUE, hexc_realplayer);
   hexc_game_ctor(&game, &red, &blue);
   hexc_game_console(&game);
-  hexc_grid_print(game.grid, stdout);
+  hexc_game_print(game, stdout);
   return 0;
 }

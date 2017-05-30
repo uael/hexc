@@ -27,14 +27,28 @@
 
 #include "hexc.h"
 
-void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color) {
+void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color, hexc_play_t (*play)(struct hexc_player*, hexc_game_t*)) {
   *self = (hexc_player_t) {
     .name = name,
     .color = color,
-    .is_ai = false
+    .play = play
   };
 }
 
 void hexc_player_dtor(hexc_player_t *self) {
 
+}
+
+bool hexc_player_win(hexc_player_t *self) {
+  return hexc_state_win(self->state);
+}
+
+hexc_play_t hexc_realplayer(struct hexc_player *self, hexc_game_t *game) {
+  int x, y;
+
+  hexc_game_print(*game, stdout);
+  printf("player %s, where to play ? <x> <y> :", hexc_color_tostring(self->color));
+  scanf("%d %d", &x, &y);
+
+  return (hexc_play_t) {(uint8_t) x, (uint8_t) y};
 }
