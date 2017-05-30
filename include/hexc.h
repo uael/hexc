@@ -58,7 +58,7 @@ struct hexc_cell {
 extern void hexc_grid_init(hexc_cell_t grid[14][14]);
 extern void hexc_grid_reset(hexc_cell_t grid[14][14]);
 extern void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream);
-extern bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out);
+extern bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y);
 extern void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count);
 
 struct hexc_player {
@@ -89,6 +89,7 @@ struct hexc_game {
 
 extern void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue);
 extern void hexc_game_dtor(hexc_game_t *self);
-extern bool hexc_game_play(hexc_game_t *self);
+extern bool hexc_game_run(hexc_game_t *self);
+extern bool hexc_game_play(hexc_game_t *self, hexc_color_t color, int x, int y);
 
 #endif /* HEXC_H__ */

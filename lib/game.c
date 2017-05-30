@@ -39,6 +39,23 @@ void hexc_game_dtor(hexc_game_t *self) {
 
 }
 
-bool hexc_game_play(hexc_game_t *self) {
+bool hexc_game_run(hexc_game_t *self) {
   return true;
+}
+
+bool hexc_game_play(hexc_game_t *self, hexc_color_t color, int x, int y) {
+  hexc_cell_t *cell;
+
+  cell = &self->grid[x][y];
+  if (cell->color == HEXC_COLOR_WHITE) {
+    switch (color) {
+      case HEXC_COLOR_BLUE:
+        return hexc_grid_search_victory(self->grid, 0, 1);
+      case HEXC_COLOR_RED:
+        return hexc_grid_search_victory(self->grid, 1, 0);
+      default:break;
+    }
+  }
+
+  return false;
 }

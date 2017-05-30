@@ -108,21 +108,17 @@ static bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neigh
   return victory;
 }
 
-static bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y) {
-  bool victory = false;
+bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y) {
+  bool victory;
   hexc_cell_t *cell, *cells[6];
   int count;
 
+  hexc_grid_reset(grid);
   cell = &grid[x][y];
   cell->past = true;
   hexc_grid_neighbor_cells(grid, cell->x, cell->y, cells, (unsigned int *) &count);
   victory = hexc_grid_search_winner(grid, cells, count);
-  hexc_grid_reset(grid);
   return victory;
-}
-
-bool hexc_grid_has_winner(hexc_cell_t grid[14][14], hexc_player_t *out) {
-  return false;
 }
 
 void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count) {
