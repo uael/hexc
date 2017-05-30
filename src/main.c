@@ -30,6 +30,7 @@
 int main() {
   hexc_cell_t grid[14][14] = {0};
 
+  hexc_grid_init(grid);
   hexc_grid_print(grid, stdout);
   return 0;
 }
