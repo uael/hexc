@@ -31,6 +31,17 @@ bool hexc_grid_has_winner(hexc_color_t *grid[14][14], hexc_player_t *out) {
   return false;
 }
 
-void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], unsigned x, unsigned y, hexc_color_t *cells[6], unsigned *count) {
+void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], int x, int y, hexc_color_t *cells[6], unsigned *count) {
+  int i, j;
 
+  *count = 0;
+  for (i = x-1; i<x+1; ++i) {
+    if (i >= 0 && i < 14) {
+      for (j = y-1; j<y+1; ++j) {
+        if (j >= 0 && j < 14) {
+          *cells[*count++] = *grid[i][j];
+        }
+      }
+    }
+  }
 }

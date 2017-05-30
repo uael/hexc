@@ -64,7 +64,7 @@ struct hexc_ai {
   void (*play)(struct hexc_ai *self, hexc_game_t *game);
 };
 
-extern void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(struct hexc_ai *, hexc_game_t *));
+extern void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(hexc_ai_t *, hexc_game_t *));
 extern void hexc_ai_dtor(hexc_ai_t *self);
 
 struct hexc_game {
@@ -77,6 +77,6 @@ extern void hexc_game_dtor(hexc_game_t *self);
 extern bool hexc_game_play(hexc_game_t *self);
 
 extern bool hexc_grid_has_winner(hexc_color_t *grid[14][14], hexc_player_t *out);
-extern void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], unsigned x, unsigned y, hexc_color_t *cells[6], unsigned *count);
+extern void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], int x, int y, hexc_color_t *cells[6], unsigned *count);
 
 #endif /* HEXC_H__ */
