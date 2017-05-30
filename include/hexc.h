@@ -76,6 +76,7 @@ extern void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t 
 extern void hexc_game_dtor(hexc_game_t *self);
 extern bool hexc_game_play(hexc_game_t *self);
 
-extern bool hexc_grid_has_winner(hexc_color_t grid[14][14]);
+extern bool hexc_grid_has_winner(hexc_color_t *grid[14][14], hexc_player_t *out);
+extern void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], unsigned x, unsigned y, hexc_color_t *cells[6], unsigned *count);
 
 #endif /* HEXC_H__ */

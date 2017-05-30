@@ -27,4 +27,10 @@
 
 #include "hexc.h"
 
-bool hexc_grid_has_winner(hexc_color_t grid[14][14]);
+bool hexc_grid_has_winner(hexc_color_t *grid[14][14], hexc_player_t *out) {
+  return false;
+}
+
+void hexc_grid_neighbor_cells(hexc_color_t *grid[14][14], unsigned x, unsigned y, hexc_color_t *cells[6], unsigned *count) {
+
+}
