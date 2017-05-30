@@ -28,11 +28,11 @@
 #include <string.h>
 #include "hexc.h"
 
-void hexc_grid_ctor(hexc_cell_t grid[14][14]) {
+void hexc_grid_ctor(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE]) {
   int i, j;
 
-  for (i = 0; i<14; ++i) {
-    for (j = 0; j<14; ++j) {
+  for (i = 0; i<HEXC_GSIZE; ++i) {
+    for (j = 0; j<HEXC_GSIZE; ++j) {
       grid[i][j].color = HEXC_COLOR_WHITE;
       grid[i][j].x = i;
       grid[i][j].y = j;
@@ -40,26 +40,31 @@ void hexc_grid_ctor(hexc_cell_t grid[14][14]) {
   }
 }
 
-void hexc_grid_reset(hexc_cell_t grid[14][14]) {
+void hexc_grid_reset(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE]) {
   int i, j;
 
-  for (i = 0; i<14; ++i) {
-    for (j = 0; j<14; ++j) {
+  for (i = 0; i<HEXC_GSIZE; ++i) {
+    for (j = 0; j<HEXC_GSIZE; ++j) {
       grid[i][j].past = false;
     }
   }
 }
 
-void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream) {
+void hexc_grid_print(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE], FILE *stream) {
   int i, j, k;
   hexc_cell_t cell;
 
-  fputs(" / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\\n", stream);
-  for (i = 0; i<14; ++i) {
+  for (i = 0; i<HEXC_GSIZE; ++i) {
+    if (i == 0) {
+      for (k = 0; k<HEXC_GSIZE; ++k) {
+        fputs(" / \\", stream);
+      }
+      fputc('\n', stream);
+    }
     for (k = 0; k < (2*i); ++k) {
       fputc(' ', stream);
     }
-    for (j = 0; j<14; ++j) {
+    for (j = 0; j<HEXC_GSIZE; ++j) {
       cell = grid[i][j];
       fputs("| ", stream);
       switch (cell.color) {
@@ -79,11 +84,31 @@ void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream) {
     for (k = 0; k < (2*i); ++k) {
       fputc(' ', stream);
     }
-    fputs(" \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\\n", stream);
+    for (k = 0; k<HEXC_GSIZE; ++k) {
+      fputs(" \\ /", stream);
+    }
+    if (i < HEXC_GSIZE-1) {
+      fputs(" \\", stream);
+    }
+    fputc('\n', stream);
   }
 }
 
-bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
+void hexc_grid_freecells(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE], hexc_cell_t *cells[HEXC_GSIZE*HEXC_GSIZE], unsigned *count) {
+  int i, j;
+
+  *count = 0;
+  for (i = 0; i<HEXC_GSIZE; ++i) {
+    for (j = 0; j<HEXC_GSIZE; ++j) {
+      if (grid[i][j].color == HEXC_COLOR_WHITE) {
+        cells[*count] = &grid[i][j];
+        ++*count;
+      }
+    }
+  }
+}
+
+bool hexc_grid_search_winner(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
   bool victory = false;
   hexc_cell_t *cell, *next, *cells[6];
   int i, j, count;
@@ -94,10 +119,10 @@ bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cel
       hexc_grid_neighbor_cells(grid, cell->x, cell->y, cells, (unsigned int *) &count);
       for (j = 0; j<count; ++j) {
         next = cells[j];
-        if (next->color == HEXC_COLOR_BLUE && next->x >= 14) {
+        if (next->color == HEXC_COLOR_BLUE && next->x >= HEXC_GSIZE) {
           victory = true;
         }
-        if (next->color == HEXC_COLOR_RED && next->y >= 14) {
+        if (next->color == HEXC_COLOR_RED && next->y >= HEXC_GSIZE) {
           victory = true;
         }
       }
@@ -111,7 +136,7 @@ bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cel
   return victory;
 }
 
-bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y) {
+bool hexc_grid_search_victory(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE], int x, int y) {
   bool victory;
   hexc_cell_t *cell, *cells[6];
   int count;
@@ -124,12 +149,12 @@ bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y) {
   return victory;
 }
 
-void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_t *cells[6], unsigned *count) {
+void hexc_grid_neighbor_cells(hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE], int x, int y, hexc_cell_t *cells[6], unsigned *count) {
   hexc_cell_t cell;
 
   cell = grid[x][y];
 #define ADD_COUPLE(i, j) \
-  do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14&&!grid[i][j].past&&grid[i][j].color==cell.color) \
+  do if ((i)>=0&&(i)<HEXC_GSIZE&&(j)>=0&&(j)<HEXC_GSIZE&&!grid[i][j].past&&grid[i][j].color==cell.color) \
     *(cells + (++*count, *count-1)) = (grid[i][j].past = true, &grid[i][j]); \
   while (0)
 

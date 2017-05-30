@@ -40,23 +40,24 @@ void hexc_game_dtor(hexc_game_t *self) {
 
 }
 
-bool hexc_game_run(hexc_game_t *self) {
+bool hexc_game_console(hexc_game_t *self) {
   hexc_color_t color = HEXC_COLOR_RED;
   hexc_ai_t *ai;
   hexc_player_t *player;
   bool victory = false;
-  int play[2];
+  hexc_play_t play;
 
   while (!victory) {
     player = &self->players[color];
     if (player->is_ai) {
       ai = (hexc_ai_t *) player;
-      ai->play(ai, self, play);
+      play = ai->play(ai, self);
     } else {
+      hexc_grid_print(self->grid, stdout);
       printf("player %s, where to play ? <x> <y> :", hexc_color_tostring(color));
-      scanf("%d %d", &play[0], &play[1]);
+      scanf("%d %d", &play.x, &play.y);
     }
-    victory = hexc_game_play(self, color, play[0], play[1]);
+    victory = hexc_game_play(self, color, play.x, play.y);
     color = (hexc_color_t) !color;
   }
   return true;

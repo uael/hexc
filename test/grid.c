@@ -31,7 +31,7 @@
 #include "hexc.h"
 
 CUTEST_DATA {
-  hexc_cell_t grid[14][14];
+  hexc_cell_t grid[HEXC_GSIZE][HEXC_GSIZE];
 };
 
 CUTEST_SETUP {

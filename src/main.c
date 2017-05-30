@@ -35,7 +35,7 @@ int main() {
   hexc_player_ctor(&red, hexc_color_tostring(HEXC_COLOR_RED), HEXC_COLOR_RED);
   hexc_player_ctor(&blue, hexc_color_tostring(HEXC_COLOR_BLUE), HEXC_COLOR_BLUE);
   hexc_game_ctor(&game, &red, &blue);
-  hexc_game_run(&game);
+  hexc_game_console(&game);
   hexc_grid_print(game.grid, stdout);
   return 0;
 }
