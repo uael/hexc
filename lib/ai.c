@@ -27,7 +27,7 @@
 
 #include "hexc.h"
 
-void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(struct hexc_ai *, hexc_game_t *)) {
+void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(struct hexc_ai*, hexc_game_t*, int[2])) {
   *self = (hexc_ai_t) {
     .name = name,
     .color = color,

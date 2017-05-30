@@ -37,7 +37,7 @@
 #endif
 
 typedef const char *string_t;
-typedef unsigned char hexc_color_t;
+typedef char hexc_color_t;
 typedef struct hexc_cell hexc_cell_t;
 typedef struct hexc_player hexc_player_t;
 typedef struct hexc_ai hexc_ai_t;
@@ -49,13 +49,15 @@ enum hexc_color {
   HEXC_COLOR_BLUE = 1
 };
 
+extern string_t hexc_color_tostring(hexc_color_t color);
+
 struct hexc_cell {
   int x, y;
   hexc_color_t color;
   bool past;
 };
 
-extern void hexc_grid_init(hexc_cell_t grid[14][14]);
+extern void hexc_grid_ctor(hexc_cell_t grid[14][14]);
 extern void hexc_grid_reset(hexc_cell_t grid[14][14]);
 extern void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream);
 extern bool hexc_grid_search_victory(hexc_cell_t grid[14][14], int x, int y);
@@ -76,10 +78,10 @@ struct hexc_ai {
   bool is_ai;
   hexc_cell_t vue[14][14];
 
-  void (*play)(struct hexc_ai *self, hexc_game_t *game);
+  void (*play)(struct hexc_ai*, hexc_game_t*, int[2]);
 };
 
-extern void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(hexc_ai_t *, hexc_game_t *));
+extern void hexc_ai_ctor(hexc_ai_t *self, string_t name, hexc_color_t color, void (*play)(hexc_ai_t*, hexc_game_t*, int[2]));
 extern void hexc_ai_dtor(hexc_ai_t *self);
 
 struct hexc_game {

@@ -33,6 +33,7 @@ void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue) 
       *red, *blue
     }
   };
+  hexc_grid_ctor(self->grid);
 }
 
 void hexc_game_dtor(hexc_game_t *self) {
@@ -40,6 +41,24 @@ void hexc_game_dtor(hexc_game_t *self) {
 }
 
 bool hexc_game_run(hexc_game_t *self) {
+  hexc_color_t color = HEXC_COLOR_RED;
+  hexc_ai_t *ai;
+  hexc_player_t *player;
+  bool victory = false;
+  int play[2];
+
+  while (!victory) {
+    player = &self->players[color];
+    if (player->is_ai) {
+      ai = (hexc_ai_t *) player;
+      ai->play(ai, self, play);
+    } else {
+      printf("player %s, where to play ? <x> <y> :", hexc_color_tostring(color));
+      scanf("%d %d", &play[0], &play[1]);
+    }
+    victory = hexc_game_play(self, color, play[0], play[1]);
+    color = (hexc_color_t) !color;
+  }
   return true;
 }
 
@@ -48,12 +67,14 @@ bool hexc_game_play(hexc_game_t *self, hexc_color_t color, int x, int y) {
 
   cell = &self->grid[x][y];
   if (cell->color == HEXC_COLOR_WHITE) {
+    cell->color = color;
     switch (color) {
       case HEXC_COLOR_BLUE:
         return hexc_grid_search_victory(self->grid, 0, 1);
       case HEXC_COLOR_RED:
         return hexc_grid_search_victory(self->grid, 1, 0);
-      default:break;
+      default:
+        break;
     }
   }
 

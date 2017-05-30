@@ -25,9 +25,10 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
+#include <string.h>
 #include "hexc.h"
 
-void hexc_grid_init(hexc_cell_t grid[14][14]) {
+void hexc_grid_ctor(hexc_cell_t grid[14][14]) {
   int i, j;
 
   for (i = 0; i<14; ++i) {
@@ -82,9 +83,10 @@ void hexc_grid_print(hexc_cell_t grid[14][14], FILE *stream) {
   }
 }
 
-static bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
+bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neighbor_cells[6], int neighbor_cells_n) {
   bool victory = false;
-  hexc_cell_t *cell, *next, *cells[6];
+  hexc_cell_t *cell;
+  hexc_cell_t *next, *cells[6];
   int i, j, count;
 
   if (neighbor_cells_n) {
@@ -101,7 +103,9 @@ static bool hexc_grid_search_winner(hexc_cell_t grid[14][14], hexc_cell_t *neigh
         }
       }
       if (!victory) {
-        victory = hexc_grid_search_winner(grid, cells, count);
+        hexc_cell_t *nexts[6];
+        memcpy(nexts, cells, sizeof(hexc_cell_t *) * 6);
+        victory = hexc_grid_search_winner(grid, nexts, count);
       }
     }
   }
@@ -126,7 +130,7 @@ void hexc_grid_neighbor_cells(hexc_cell_t grid[14][14], int x, int y, hexc_cell_
 
   cell = grid[x][y];
 #define ADD_COUPLE(i, j) \
-  do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14&&grid[i][j].color==cell.color) \
+  do if ((i)>=0&&(i)<14&&(j)>=0&&(j)<14&&!grid[i][j].past&&grid[i][j].color==cell.color) \
     *(cells + (++*count, *count-1)) = (grid[i][j].past = true, &grid[i][j]); \
   while (0)
 

@@ -28,9 +28,14 @@
 #include <hexc.h>
 
 int main() {
-  hexc_cell_t grid[14][14] = {0};
+  hexc_game_t game = {0};
+  hexc_player_t red = {0};
+  hexc_player_t blue = {0};
 
-  hexc_grid_init(grid);
-  hexc_grid_print(grid, stdout);
+  hexc_player_ctor(&red, hexc_color_tostring(HEXC_COLOR_RED), HEXC_COLOR_RED);
+  hexc_player_ctor(&blue, hexc_color_tostring(HEXC_COLOR_BLUE), HEXC_COLOR_BLUE);
+  hexc_game_ctor(&game, &red, &blue);
+  hexc_game_run(&game);
+  hexc_grid_print(game.grid, stdout);
   return 0;
 }
