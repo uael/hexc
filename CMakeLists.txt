@@ -53,7 +53,7 @@ set(hexc_VENDOR_DIR ${CMAKE_CURRENT_LIST_DIR}/vendor)
 file(GLOB_RECURSE hexc_HEADERS ${hexc_HEADERS} ${hexc_INCLUDE_DIR}/${PROJECT_NAME}/*.h)
 file(GLOB_RECURSE hexc_SOURCES ${hexc_SOURCES} ${hexc_SOURCE_DIR}/*.c)
 
-add_library(${PROJECT_NAME} STATIC ${hexc_SOURCES} ${hexc_HEADERS} ${hexc_INCLUDE_DIR}/${PROJECT_NAME}.h)
+add_executable(${PROJECT_NAME} ${hexc_SOURCES} ${hexc_HEADERS} ${hexc_INCLUDE_DIR}/${PROJECT_NAME}.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${hexc_HEADERS}")
 target_include_directories(${PROJECT_NAME} PUBLIC ${hexc_INCLUDE_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE ${hexc_SOURCE_DIR})
