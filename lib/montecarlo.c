@@ -64,11 +64,12 @@ HEX_MOVE(hex_ai_montecarlo) {
         uint8_t kpos;
         hex_cell_t id, tmp;
 
-        kpos = (uint8_t) (rand() % (((free_nodes_count - 1) - k)) + 1);
+        kpos = (uint8_t) ((rand() % (free_nodes_count - 1 - k)) + 1);
         id = free_nodes[kpos];
         tmp = free_nodes[kpos];
-        free_nodes[kpos] = free_nodes[(free_nodes_count - 1) - k];
-        free_nodes[(free_nodes_count - 1) - k] = tmp;
+        free_nodes[kpos] = free_nodes[free_nodes_count - 1 - k];
+        free_nodes[free_nodes_count - 1 - k] = tmp;
+
         if (pos.v == id.v) {
           ++k;
           continue;

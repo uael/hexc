@@ -87,7 +87,6 @@ void hex_board_toggle(hex_board_t *self, uint8_t idx, hex_color_t color) {
 void hex_board_print(hex_board_t *self, FILE *stream) {
   uint8_t i, j, s;
 
-  fputc(' ', stream);
   for (i = 0; i < HEX_GSIZE; ++i) {
     fprintf(stream, " %c ", 'A' + i);
   }
