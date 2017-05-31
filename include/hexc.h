@@ -28,6 +28,7 @@
 #ifndef  HEXC_H__
 # define HEXC_H__
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -62,8 +63,12 @@ union hex_cell {
 };
 
 extern bool hex_state_win(uint16_t player_state[HEX_FSIZE]);
+extern bool hex_state_is_toggled(uint16_t player_state[HEX_FSIZE], uint8_t idx);
+extern bool hex_state_is_toggled_by(uint16_t player_state[HEX_FSIZE], uint8_t idx, hex_color_t color);
+extern void hex_state_toggle(uint16_t player_state[HEX_FSIZE], uint8_t row, uint8_t col);
+extern void hex_state_toggle_by(uint16_t player_state[HEX_FSIZE], uint8_t idx, hex_color_t color);
 
-enum hex_color {
+  enum hex_color {
   HEXC_COLOR_X = 0,
   HEXC_COLOR_O = 1
 };

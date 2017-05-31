@@ -118,3 +118,40 @@ bool hex_state_win(uint16_t player_state[HEX_FSIZE]) {
     }
   }
 }
+
+bool hex_state_is_toggled(uint16_t player_state[HEX_FSIZE], uint8_t idx) {
+  return (bool) (((player_state[idx / HEX_GSIZE] >> (idx % HEX_GSIZE)) & 1) |
+    ((player_state[idx % HEX_GSIZE] >> (idx / HEX_GSIZE)) & 1));
+}
+
+bool hex_state_is_toggled_by(uint16_t player_state[HEX_FSIZE], uint8_t idx, hex_color_t color) {
+  uint8_t x, y;
+
+  if (color != 0u) {
+    x = (uint8_t) (idx % HEX_GSIZE);
+    y = (uint8_t) (idx / HEX_GSIZE);
+  }
+  else {
+    x = (uint8_t) (idx / HEX_GSIZE);
+    y = (uint8_t) (idx % HEX_GSIZE);
+  }
+  return (bool) ((player_state[x] >> y) & 1);
+}
+
+void hex_state_toggle(uint16_t player_state[HEX_FSIZE], uint8_t row, uint8_t col) {
+  player_state[row] |= 1 << col;
+}
+
+void hex_state_toggle_by(uint16_t player_state[HEX_FSIZE], uint8_t idx, hex_color_t color) {
+  uint8_t x, y;
+
+  if (color != 0u) {
+    x = (uint8_t) (idx % HEX_GSIZE);
+    y = (uint8_t) (idx / HEX_GSIZE);
+  }
+  else {
+    x = (uint8_t) (idx / HEX_GSIZE);
+    y = (uint8_t) (idx % HEX_GSIZE);
+  }
+  player_state[x] |= 1 << y;
+}

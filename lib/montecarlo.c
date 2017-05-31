@@ -25,7 +25,6 @@
  * For more information, please refer to <http://unlicense.org>
  */
 
-#include <stdlib.h>
 #include "hexc.h"
 
 #define MC_ITS 2000
@@ -60,7 +59,7 @@ HEX_MOVE(hex_ai_montecarlo) {
 
     for (j = 0; j < MC_ITS; ++j) {
       memcpy(state, board->players[player->color].state, HEX_FSIZE * sizeof(uint16_t));
-      state[pos.x] |= 1 << pos.y;
+      hex_state_toggle(state, pos.x, pos.y);
       for (k = 0; k < moves; ++k) {
         uint8_t kpos = (uint8_t) (rand() % (((free_nodes_count - 1) - k)) + 1);;
         hex_cell_t id = free_nodes[kpos], tmp = free_nodes[kpos];
@@ -71,7 +70,7 @@ HEX_MOVE(hex_ai_montecarlo) {
           k++;
           continue;
         }
-        state[id.x] |= 1 << id.y;
+        hex_state_toggle(state, id.x, id.y);
       }
       if (hex_state_win(state)) {
         wins++;
