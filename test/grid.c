@@ -34,22 +34,10 @@ CUTEST_DATA {
   hex_cell_t grid[HEX_GSIZE][HEX_GSIZE];
 };
 
-CUTEST_SETUP {
-  hex_grid_ctor(self->grid);
-}
+CUTEST_SETUP {}
 CUTEST_TEARDOWN {}
 
 CUTEST(grid, neighbor) {
-  hex_cell_t *cells[6];
-  unsigned count;
-
-  hex_grid_neighbor_cells(self->grid, 5, 5, cells, &count);
-  ASSERT(memcmp(&self->grid[4][5], cells[0], sizeof(hex_cell_t)) == 0);
-  ASSERT(memcmp(&self->grid[4][6], cells[1], sizeof(hex_cell_t)) == 0);
-  ASSERT(memcmp(&self->grid[5][6], cells[2], sizeof(hex_cell_t)) == 0);
-  ASSERT(memcmp(&self->grid[5][4], cells[3], sizeof(hex_cell_t)) == 0);
-  ASSERT(memcmp(&self->grid[6][5], cells[4], sizeof(hex_cell_t)) == 0);
-  ASSERT(memcmp(&self->grid[6][4], cells[5], sizeof(hex_cell_t)) == 0);
   return EXIT_SUCCESS;
 }
 
