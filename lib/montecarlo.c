@@ -37,17 +37,16 @@ HEX_MOVE(hex_ai_montecarlo) {
   hex_board_print(board, stdout);
   memcpy(nodes, board->freecells, free_nodes_count * sizeof(uint8_t));
   for (i = 0; i < free_nodes_count; ++i) {
-    uint32_t id = nodes[i];
-    uint8_t row, col;
+    uint8_t id = nodes[i], x, y;
     if (player->color) {
-      row = (uint8_t) (id % HEX_GSIZE);
-      col = (uint8_t) (id / HEX_GSIZE);
+      x = (uint8_t) (id % HEX_GSIZE);
+      y = (uint8_t) (id / HEX_GSIZE);
     } else {
-      row = (uint8_t) (id / HEX_GSIZE);
-      col = (uint8_t) (id % HEX_GSIZE);
+      x = (uint8_t) (id / HEX_GSIZE);
+      y = (uint8_t) (id % HEX_GSIZE);
     }
-    free_nodes[i].x = row;
-    free_nodes[i].y = col;
+    free_nodes[i].x = x;
+    free_nodes[i].y = y;
   }
   memcpy(free_nodes_copy, free_nodes, free_nodes_count * sizeof(hex_cell_t));
   max_wins = 0;
