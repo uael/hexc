@@ -60,16 +60,15 @@ bool hex_game_console(hex_game_t *self) {
 
 bool hex_game_play(hex_game_t *self, hex_cell_t cell) {
   uint8_t pos;
-  bool victory = false;
+  bool victory;
 
   pos = (uint8_t) (cell.x * HEX_GSIZE + cell.y);
   if (hex_board_is_toggled(&self->board, pos)) {
     fputs("This position is already occupied\n", stderr);
-  } else {
-    hex_board_toggle(&self->board, pos, self->current_color);
-    victory = hex_game_win(self);
+    return false;
   }
+  hex_board_toggle(&self->board, pos, self->current_color);
+  victory = hex_game_win(self);
   self->current_color ^= 1;
-
   return victory;
 }
