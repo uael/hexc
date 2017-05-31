@@ -32,46 +32,28 @@
 #include <stdint.h>
 #include <string.h>
 
-#define HEXC_GSIZE 9
-#define HEXC_FSIZE HEXC_GSIZE*HEXC_GSIZE
+#define HEX_GSIZE 9U
+#define HEX_FSIZE HEX_GSIZE*HEX_GSIZE
+
+#define HEX_MOVE(name) hex_cell_t name(hex_player_t *player, hex_board_t *board)
 
 #ifndef bool
 # define bool unsigned char
-# define true  1UL
-# define false 0UL
+# define true  1U
+# define false 0U
 #endif
 
-#define hexc_state_reset(state) memset(state, 0, HEXC_GSIZE * sizeof(uint16_t))
+#define hex_state_reset(state) memset(state, 0, HEX_GSIZE * sizeof(uint16_t))
 
 typedef const char *string_t;
-typedef char hexc_color_t;
-typedef struct hexc_player hexc_player_t;
-typedef union hexc_play hexc_play_t;
-typedef struct hexc_game hexc_game_t;
+typedef char hex_color_t;
+typedef struct hex_player hex_player_t;
+typedef union hex_cell hex_cell_t;
+typedef struct hex_board hex_board_t;
+typedef struct hex_game hex_game_t;
+typedef hex_cell_t (*hex_move_t)(hex_player_t*, hex_board_t*);
 
-extern bool hexc_state_win(uint16_t player_state[HEXC_FSIZE]);
-
-enum hexc_color {
-  HEXC_COLOR_WHITE = -1,
-  HEXC_COLOR_RED = 0,
-  HEXC_COLOR_BLUE = 1
-};
-
-extern string_t hexc_color_tostring(hexc_color_t color);
-
-struct hexc_player {
-  string_t name;
-  hexc_color_t color;
-  uint16_t state[HEXC_FSIZE];
-
-  hexc_play_t (*play)(struct hexc_player*, hexc_game_t*);
-};
-
-extern void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color, hexc_play_t (*play)(struct hexc_player*, hexc_game_t*));
-extern void hexc_player_dtor(hexc_player_t *self);
-extern bool hexc_player_win(hexc_player_t *self);
-
-union hexc_play {
+union hex_cell {
   struct {
     uint8_t x;
     uint8_t y;
@@ -79,22 +61,47 @@ union hexc_play {
   uint16_t v;
 };
 
-struct hexc_game {
-  uint16_t freecells_c, freecells[HEXC_FSIZE], freecells_idx[HEXC_FSIZE];
-  hexc_player_t players[2];
+extern bool hex_state_win(uint16_t player_state[HEX_FSIZE]);
+
+enum hex_color {
+  HEXC_COLOR_X = 0,
+  HEXC_COLOR_O = 1
 };
 
-extern void hexc_game_ctor(hexc_game_t *self, hexc_player_t *red, hexc_player_t *blue);
-extern void hexc_game_dtor(hexc_game_t *self);
-extern void hexc_game_reset(hexc_game_t *self);
-extern bool hexc_game_is_toggled(const hexc_game_t *self, uint32_t id);
-extern void hexc_game_toggle(hexc_game_t *self, uint32_t id, hexc_color_t color);
-extern bool hexc_is_end_game(hexc_game_t *self, hexc_color_t color);
-extern bool hexc_game_console(hexc_game_t *self);
-extern bool hexc_game_play(hexc_game_t *self, hexc_color_t color, int x, int y);
-extern void hexc_game_print(hexc_game_t b, FILE *stream);
+extern string_t hex_color_tostring(hex_color_t color);
 
-extern hexc_play_t hexc_realplayer(struct hexc_player *self, hexc_game_t *game);
-extern hexc_play_t hexc_ai_montecarlo(struct hexc_player *self, hexc_game_t *game);
+struct hex_player {
+  hex_color_t color;
+  uint16_t state[HEX_FSIZE];
+  hex_move_t move;
+};
+
+extern void hex_player_ctor(hex_player_t *self, hex_color_t color, hex_move_t move);
+
+struct hex_board {
+  uint8_t freecells_c;
+  uint16_t freecells[HEX_FSIZE], freecells_idx[HEX_FSIZE];
+  hex_player_t players[2];
+};
+
+extern void hex_board_ctor(hex_board_t *self, hex_player_t *red, hex_player_t *blue);
+extern void hex_board_reset(hex_board_t *self);
+extern bool hex_board_is_toggled(const hex_board_t *self, uint8_t idx);
+extern void hex_board_toggle(hex_board_t *self, uint8_t idx, hex_color_t color);
+extern void hex_board_print(hex_board_t *self, FILE *stream);
+
+struct hex_game {
+  hex_board_t board;
+  hex_color_t current_color;
+};
+
+extern void hex_game_ctor(hex_game_t *self, hex_move_t X, hex_move_t O);
+extern void hex_game_reset(hex_game_t *self);
+extern bool hex_game_win(hex_game_t *self);
+extern bool hex_game_console(hex_game_t *self);
+extern bool hex_game_play(hex_game_t *self, hex_cell_t cell);
+
+extern HEX_MOVE(hex_realplayer);
+extern HEX_MOVE(hex_ai_montecarlo);
 
 #endif /* HEXC_H__ */

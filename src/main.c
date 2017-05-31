@@ -26,16 +26,15 @@
  */
 
 #include <hexc.h>
+#include <stdlib.h>
+#include <time.h>
 
 int main() {
-  hexc_game_t game = {0};
-  hexc_player_t red = {0};
-  hexc_player_t blue = {0};
+  hex_game_t game;
 
-  hexc_player_ctor(&red, hexc_color_tostring(HEXC_COLOR_RED), HEXC_COLOR_RED, hexc_ai_montecarlo);
-  hexc_player_ctor(&blue, hexc_color_tostring(HEXC_COLOR_BLUE), HEXC_COLOR_BLUE, hexc_realplayer);
-  hexc_game_ctor(&game, &red, &blue);
-  hexc_game_console(&game);
-  hexc_game_print(game, stdout);
+  srand((unsigned) time(NULL));
+  hex_game_ctor(&game, hex_ai_montecarlo, hex_ai_montecarlo);
+  hex_game_console(&game);
+  hex_board_print(&game.board, stdout);
   return 0;
 }

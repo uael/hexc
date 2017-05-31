@@ -45,34 +45,34 @@ if(MSVC)
     endforeach()
 endif()
 
-set(hexc_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
-set(hexc_LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/lib)
-set(hexc_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
-set(hexc_TEST_DIR ${CMAKE_CURRENT_LIST_DIR}/test)
-set(hexc_VENDOR_DIR ${CMAKE_CURRENT_LIST_DIR}/vendor)
+set(hex_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/include)
+set(hex_LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/lib)
+set(hex_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
+set(hex_TEST_DIR ${CMAKE_CURRENT_LIST_DIR}/test)
+set(hex_VENDOR_DIR ${CMAKE_CURRENT_LIST_DIR}/vendor)
 
-file(GLOB_RECURSE hexc_HEADERS ${hexc_HEADERS} ${hexc_INCLUDE_DIR}/${PROJECT_NAME}/*.h)
-file(GLOB_RECURSE hexc_SOURCES ${hexc_SOURCES} ${hexc_LIB_DIR}/*.c)
+file(GLOB_RECURSE hex_HEADERS ${hex_HEADERS} ${hex_INCLUDE_DIR}/${PROJECT_NAME}/*.h)
+file(GLOB_RECURSE hex_SOURCES ${hex_SOURCES} ${hex_LIB_DIR}/*.c)
 
-add_library(${PROJECT_NAME} ${hexc_SOURCES} ${hexc_HEADERS} ${hexc_INCLUDE_DIR}/${PROJECT_NAME}.h)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${hexc_HEADERS}")
-target_include_directories(${PROJECT_NAME} PUBLIC ${hexc_INCLUDE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE ${hexc_LIB_DIR})
+add_library(${PROJECT_NAME} ${hex_SOURCES} ${hex_HEADERS} ${hex_INCLUDE_DIR}/${PROJECT_NAME}.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${hex_HEADERS}")
+target_include_directories(${PROJECT_NAME} PUBLIC ${hex_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${hex_LIB_DIR})
 
-file(GLOB_RECURSE hex_SOURCES ${hex_SOURCES} ${hexc_SOURCE_DIR}/*.c)
+file(GLOB_RECURSE hex_SOURCES ${hex_SOURCES} ${hex_SOURCE_DIR}/*.c)
 
 add_executable(hex ${hex_SOURCES})
 target_link_libraries(hex ${PROJECT_NAME})
 
 enable_testing()
-add_subdirectory(${hexc_TEST_DIR})
-add_subdirectory(${hexc_VENDOR_DIR})
+add_subdirectory(${hex_TEST_DIR})
+add_subdirectory(${hex_VENDOR_DIR})
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER DESTINATION include/${PROJECT_NAME}
 )
-install(FILES ${hexc_INCLUDE_DIR}/${PROJECT_NAME}.h
+install(FILES ${hex_INCLUDE_DIR}/${PROJECT_NAME}.h
     DESTINATION include
 )

@@ -27,11 +27,11 @@
 
 #include "hexc.h"
 
-string_t hexc_color_tostring(hexc_color_t color) {
+string_t hex_color_tostring(hex_color_t color) {
   switch (color) {
-    case HEXC_COLOR_RED:
+    case HEXC_COLOR_X:
       return "red";
-    case HEXC_COLOR_BLUE:
+    case HEXC_COLOR_O:
       return "blue";
     default:
       return "white";

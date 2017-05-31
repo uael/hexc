@@ -28,79 +28,67 @@
 #include <stdlib.h>
 #include "hexc.h"
 
-hexc_play_t hexc_ai_montecarlo(struct hexc_player *self, hexc_game_t *game) {
-  uint32_t free_nodes_count = game->freecells_c;
-  hexc_play_t free_nodes[free_nodes_count];
-  hexc_play_t free_nodes_copy[free_nodes_count];
+#define MC_ITS 2000
 
-  uint16_t nodes[free_nodes_count];
-  memcpy(nodes, game->freecells, free_nodes_count * sizeof(uint16_t));
+HEX_MOVE(hex_ai_montecarlo) {
+  uint8_t i, p, k, moves, free_nodes_count = board->freecells_c;
+  uint16_t j, max_wins, nodes[free_nodes_count], state[HEX_FSIZE];
+  hex_cell_t win_pos, free_nodes[free_nodes_count], free_nodes_copy[free_nodes_count];
 
-  for (uint16_t i = 0; i < free_nodes_count; ++i) {
+  hex_board_print(board, stdout);
+  memcpy(nodes, board->freecells, free_nodes_count * sizeof(uint16_t));
+  for (i = 0; i < free_nodes_count; ++i) {
     uint32_t id = nodes[i];
     uint8_t row, col;
-    if (self->color != 0u) {
-      row = (uint8_t) (id % HEXC_GSIZE);
-      col = (uint8_t) (id / HEXC_GSIZE);
+    if (player->color) {
+      row = (uint8_t) (id % HEX_GSIZE);
+      col = (uint8_t) (id / HEX_GSIZE);
     } else {
-      row = (uint8_t) (id / HEXC_GSIZE);
-      col = (uint8_t) (id % HEXC_GSIZE);
+      row = (uint8_t) (id / HEX_GSIZE);
+      col = (uint8_t) (id % HEX_GSIZE);
     }
     free_nodes[i].x = row;
     free_nodes[i].y = col;
   }
+  memcpy(free_nodes_copy, free_nodes, free_nodes_count * sizeof(hex_cell_t));
+  max_wins = 0;
+  win_pos = free_nodes_copy[0];
+  moves = (uint8_t) ((free_nodes_count - 2) / 2 + player->color);
+  for (p = 0; p < free_nodes_count; ++p) {
+    uint16_t wins = 0, possible_wins = MC_ITS;
+    hex_cell_t pos = free_nodes_copy[p];
 
-  memcpy(free_nodes_copy, free_nodes, free_nodes_count * sizeof(hexc_play_t));
+    for (j = 0; j < MC_ITS; ++j) {
+      memcpy(state, board->players[player->color].state, HEX_FSIZE * sizeof(uint16_t));
+      state[pos.x] |= 1 << pos.y;
+      for (k = 0; k < moves; ++k) {
+        uint8_t kpos = (uint8_t) (rand() % (((free_nodes_count - 1) - k)) + 1);;
+        hex_cell_t id = free_nodes[kpos], tmp = free_nodes[kpos];
 
-  uint16_t b[HEXC_FSIZE];
-  uint32_t max_wins = 0;
-  hexc_play_t win_pos = free_nodes_copy[0];
-  uint32_t moves = (free_nodes_count - 2) / 2 + self->color;
-
-  for (uint32_t p = 0; p < free_nodes_count; ++p) {
-    uint32_t wins = 0;
-    uint32_t possible_wins = 2000;
-    hexc_play_t pos = free_nodes_copy[p];
-
-    for (uint32_t j = 0; j < 2000; ++j) {
-      memcpy(b, game->players[self->color].state, HEXC_FSIZE * sizeof(uint16_t));
-      b[pos.x] |= 1 << pos.y;
-
-      for (uint32_t k = 0; k < moves; ++k) {
-        uint32_t kpos = rand() % (((free_nodes_count - 1) - k)) + 1;;
-        hexc_play_t id = free_nodes[kpos];
-        hexc_play_t tmp = free_nodes[kpos];
         free_nodes[kpos] = free_nodes[(free_nodes_count - 1) - k];
         free_nodes[(free_nodes_count - 1) - k] = tmp;
-
         if (pos.v == id.v) {
           k++;
           continue;
         }
-
-        b[id.x] |= 1 << id.y;
+        state[id.x] |= 1 << id.y;
       }
-      if (hexc_state_win(b)) {
+      if (hex_state_win(state)) {
         wins++;
       } else {
         possible_wins--;
       }
-
       if (possible_wins < max_wins) {
         goto end_loop;
       }
     }
-
     if (wins > max_wins) {
       win_pos = pos;
       max_wins = wins;
     }
-
-      end_loop:;
+    end_loop:;
   }
-
-  if (self->color != 0u)
-    return (hexc_play_t) {win_pos.y, win_pos.x};
-
-  return (hexc_play_t) {win_pos.x, win_pos.y};
+  if (player->color)
+    return (hex_cell_t) {win_pos.y, win_pos.x};
+  return (hex_cell_t) {win_pos.x, win_pos.y};
 }

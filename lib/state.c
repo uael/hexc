@@ -27,15 +27,15 @@
 
 #include "hexc.h"
 
-bool hexc_state_win(uint16_t player_state[HEXC_FSIZE]) {
+bool hex_state_win(uint16_t player_state[HEX_FSIZE]) {
   enum State {
     LinkDown,
     LinkUp,
     Capture
   };
 
-  uint16_t board[HEXC_FSIZE] = {0}, shadow_board[HEXC_FSIZE] = {0};
-  memcpy(board, player_state, HEXC_FSIZE * sizeof(uint16_t));
+  uint16_t board[HEX_FSIZE] = {0}, shadow_board[HEX_FSIZE] = {0};
+  memcpy(board, player_state, HEX_FSIZE * sizeof(uint16_t));
 
   uint32_t shadow_row = board[0];
   uint32_t row = 0;
@@ -54,7 +54,7 @@ bool hexc_state_win(uint16_t player_state[HEXC_FSIZE]) {
         connections = (row & shadow_row) | ((shadow_row >> 1) & row);
 
         if (connections) {
-          if (row_num == HEXC_GSIZE - 1)
+          if (row_num == HEX_GSIZE - 1)
             return true;
 
           state = Capture;

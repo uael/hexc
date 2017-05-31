@@ -27,28 +27,23 @@
 
 #include "hexc.h"
 
-void hexc_player_ctor(hexc_player_t *self, string_t name, hexc_color_t color, hexc_play_t (*play)(struct hexc_player*, hexc_game_t*)) {
-  *self = (hexc_player_t) {
-    .name = name,
+void hex_player_ctor(hex_player_t *self, hex_color_t color, hex_cell_t (*move)(hex_player_t*, hex_board_t*)) {
+  *self = (hex_player_t) {
     .color = color,
-    .play = play
+    .move = move
   };
 }
 
-void hexc_player_dtor(hexc_player_t *self) {
+void hex_player_dtor(hex_player_t *self) {
 
 }
 
-bool hexc_player_win(hexc_player_t *self) {
-  return hexc_state_win(self->state);
-}
-
-hexc_play_t hexc_realplayer(struct hexc_player *self, hexc_game_t *game) {
+hex_cell_t hex_realplayer(hex_player_t *player, hex_board_t *game) {
   int x, y;
 
-  hexc_game_print(*game, stdout);
-  printf("player %s, where to play ? <x> <y> :", hexc_color_tostring(self->color));
+  hex_board_print(game, stdout);
+  printf("player %s, where to move ? <x> <y> :", hex_color_tostring(player->color));
   scanf("%d %d", &x, &y);
 
-  return (hexc_play_t) {(uint8_t) x, (uint8_t) y};
+  return (hex_cell_t) {(uint8_t) x, (uint8_t) y};
 }
