@@ -44,7 +44,7 @@
 # define false 0U
 #endif
 
-#define hex_state_reset(state) memset(state, 0, HEX_GSIZE * sizeof(uint16_t))
+#define hex_state_reset(state) memset(state, 0, HEX_FSIZE * sizeof(uint16_t))
 
 typedef const char *string_t;
 typedef char hex_color_t;
@@ -84,13 +84,14 @@ struct hex_player {
 extern void hex_player_ctor(hex_player_t *self, hex_color_t color, hex_move_t move);
 
 struct hex_board {
-  uint8_t freecells_c;
-  uint16_t freecells[HEX_FSIZE], freecells_idx[HEX_FSIZE];
+  uint8_t freecells_c, freecells_idx[HEX_FSIZE];
+  uint8_t freecells[HEX_FSIZE];
   hex_player_t players[2];
 };
 
 extern void hex_board_ctor(hex_board_t *self, hex_player_t *red, hex_player_t *blue);
 extern void hex_board_reset(hex_board_t *self);
+extern void hex_board_cpy(hex_board_t *dest, hex_board_t *src);
 extern bool hex_board_is_toggled(const hex_board_t *self, uint8_t idx);
 extern void hex_board_toggle(hex_board_t *self, uint8_t idx, hex_color_t color);
 extern void hex_board_print(hex_board_t *self, FILE *stream);

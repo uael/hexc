@@ -27,15 +27,15 @@
 
 #include "hexc.h"
 
-#define MC_ITS 2000
+#define MC_ITS 5000
 
 HEX_MOVE(hex_ai_montecarlo) {
-  uint8_t i, p, k, moves, free_nodes_count = board->freecells_c;
-  uint16_t j, max_wins, nodes[free_nodes_count], state[HEX_FSIZE];
+  uint8_t i, p, k, moves, free_nodes_count = board->freecells_c, nodes[free_nodes_count];
+  uint16_t j, max_wins, state[HEX_FSIZE];
   hex_cell_t win_pos, free_nodes[free_nodes_count], free_nodes_copy[free_nodes_count];
 
   hex_board_print(board, stdout);
-  memcpy(nodes, board->freecells, free_nodes_count * sizeof(uint16_t));
+  memcpy(nodes, board->freecells, free_nodes_count * sizeof(uint8_t));
   for (i = 0; i < free_nodes_count; ++i) {
     uint32_t id = nodes[i];
     uint8_t row, col;

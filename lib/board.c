@@ -45,6 +45,14 @@ void hex_board_reset(hex_board_t *self) {
   self->freecells_c = HEX_FSIZE;
 }
 
+void hex_board_cpy(hex_board_t *dest, hex_board_t *src) {
+  *dest = (hex_board_t) {
+    .freecells_c = src->freecells_c
+  };
+  memcpy(dest->freecells, src->freecells, src->freecells_c * sizeof(uint8_t));
+  memcpy(dest->freecells_idx, src->freecells_idx, HEX_FSIZE * sizeof(uint8_t));
+}
+
 bool hex_board_is_toggled(const hex_board_t *self, uint8_t idx) {
   uint8_t row = (uint8_t) (idx / HEX_GSIZE);
   uint8_t col = (uint8_t) (idx % HEX_GSIZE);
@@ -54,7 +62,7 @@ bool hex_board_is_toggled(const hex_board_t *self, uint8_t idx) {
 
 void hex_board_toggle(hex_board_t *self, uint8_t idx, hex_color_t color) {
   if (!hex_board_is_toggled(self, idx)) {
-    uint16_t __tmp;
+    uint8_t __tmp;
     unsigned __row, __col, __id;
 
     if (color != 0u) {
