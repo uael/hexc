@@ -61,19 +61,22 @@ HEX_MOVE(hex_ai_montecarlo) {
       memcpy(state, board->players[player->color].state, HEX_FSIZE * sizeof(uint16_t));
       hex_state_toggle(state, pos.x, pos.y);
       for (k = 0; k < moves; ++k) {
-        uint8_t kpos = (uint8_t) (rand() % (((free_nodes_count - 1) - k)) + 1);;
-        hex_cell_t id = free_nodes[kpos], tmp = free_nodes[kpos];
+        uint8_t kpos;
+        hex_cell_t id, tmp;
 
+        kpos = (uint8_t) (rand() % (((free_nodes_count - 1) - k)) + 1);
+        id = free_nodes[kpos];
+        tmp = free_nodes[kpos];
         free_nodes[kpos] = free_nodes[(free_nodes_count - 1) - k];
         free_nodes[(free_nodes_count - 1) - k] = tmp;
         if (pos.v == id.v) {
-          k++;
+          ++k;
           continue;
         }
         hex_state_toggle(state, id.x, id.y);
       }
       if (hex_state_win(state)) {
-        wins++;
+        ++wins;
       } else {
         possible_wins--;
       }

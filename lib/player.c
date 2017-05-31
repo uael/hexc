@@ -34,16 +34,23 @@ void hex_player_ctor(hex_player_t *self, hex_color_t color, hex_cell_t (*move)(h
   };
 }
 
-void hex_player_dtor(hex_player_t *self) {
-
-}
-
 hex_cell_t hex_realplayer(hex_player_t *player, hex_board_t *game) {
-  int x, y;
+  char *line;
+  size_t line_size;
 
   hex_board_print(game, stdout);
-  printf("player %s, where to move ? <x> <y> :", hex_color_tostring(player->color));
-  scanf("%d %d", &x, &y);
+  printf("player %s, where to play ?", hex_color_tostring(player->color));
 
-  return (hex_cell_t) {(uint8_t) x, (uint8_t) y};
+  while (true) {
+    getline(&line, &line_size, stdin);
+    if (line_size >= 2) {
+      int32_t row, col;
+      col = line[0] - 'A';
+      row = atoi(line + 1) - 1;
+      if (col >= 0 && (uint32_t) col < HEX_GSIZE && row >= 0 && (uint32_t) row < HEX_GSIZE) {
+        return (hex_cell_t) {(uint8_t) row, (uint8_t) col};
+      }
+    }
+    fputs("Invalid position\n", stderr);
+  }
 }

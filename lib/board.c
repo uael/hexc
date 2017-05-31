@@ -62,25 +62,25 @@ bool hex_board_is_toggled(const hex_board_t *self, uint8_t idx) {
 
 void hex_board_toggle(hex_board_t *self, uint8_t idx, hex_color_t color) {
   if (!hex_board_is_toggled(self, idx)) {
-    uint8_t __tmp;
-    unsigned __row, __col, __id;
+    uint8_t tmp;
+    unsigned x, y, i;
 
-    if (color != 0u) {
-      __row = idx % HEX_GSIZE;
-      __col = idx / HEX_GSIZE;
+    if (color) {
+      x = idx % HEX_GSIZE;
+      y = idx / HEX_GSIZE;
     }
     else {
-      __row = idx / HEX_GSIZE;
-      __col = idx % HEX_GSIZE;
+      x = idx / HEX_GSIZE;
+      y = idx % HEX_GSIZE;
     }
-    self->players[color].state[__row] |= 1 << __col;
-    __id = self->freecells_idx[idx];
-    __tmp = self->freecells[__id];
-    self->freecells[__id] = self->freecells[--self->freecells_c];
-    self->freecells[self->freecells_c] = __tmp;
-    __tmp = self->freecells_idx[__id];
-    self->freecells_idx[__id] = self->freecells_idx[self->freecells_c];
-    self->freecells_idx[self->freecells_c] = __tmp;
+    self->players[color].state[x] |= 1 << y;
+    i = self->freecells_idx[idx];
+    tmp = self->freecells[i];
+    self->freecells[i] = self->freecells[--self->freecells_c];
+    self->freecells[self->freecells_c] = tmp;
+    tmp = self->freecells_idx[i];
+    self->freecells_idx[i] = self->freecells_idx[self->freecells_c];
+    self->freecells_idx[self->freecells_c] = tmp;
   }
 }
 
