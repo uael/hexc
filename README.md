@@ -1,2 +1,2 @@
 # hexc
-hex AI strategies in c99 
+hex AI strategies in c99
